@@ -13,7 +13,18 @@ var Lines = new Object(); //Stores location of all lines during computation
 //Visual variables
 var point_color = "red";
 var circle_color = "black";
-var line_color = "black";
+var line_colorpicker = document.getElementById("set_color");
+line_colorpicker.addEventListener('input'
+                                 , function () {
+                                    line_color = line_colorpicker.value;
+                                 });
+var line_color = line_colorpicker.value;
+increment_picker = document.getElementById("color_increment");
+increment_picker.addEventListener('input'
+                                , function() {
+                                    color_increment = parseInt(increment_picker.value, 10);
+                                });
+var color_increment = parseInt(increment_picker.value, 10);
 var text_color = "black";
 var point_size = 3;
 var text_size = 8;
@@ -22,6 +33,27 @@ var clean_canvas; //visual state of canvas with no lines drawn
 //  a) Each M increment applies a single value on color spectrum to all lines
 //  b) Each line drawn is a different color along spectrum. (more psychedelic)
 //      -> May want to change alpha value so the colors blend on intersection
+var p_colorize = false;
+var colorize_button = document.getElementById("colorize");
+colorize_button.addEventListener('click'
+                                , function() {
+                                    p_colorize = !p_colorize;
+                                    if (p_colorize)
+                                        colorize_button.innerHTML = "Stall";
+                                    else
+                                        colorize_button.innerHTML = "Colorize";
+                                });
+
+var p_psychedelic = false;
+var psychedelic_button = document.getElementById("psychedelic");
+psychedelic_button.addEventListener('click'
+                           , function() {
+                               p_psychedelic = !p_psychedelic;
+                               if (p_psychedelic)
+                                   psychedelic_button.innerHTML = "Sober up";
+                               else
+                                   psychedelic_button.innerHTML = "Psychedelic";
+                           });
 
 //Performance tracking variables
 var last_drawtime = 0;
@@ -44,6 +76,22 @@ nInput.addEventListener('input', updateCanvas);
 var M;
 var mInput = document.getElementById("m-value");
 mInput.addEventListener('input', updateTimesTable);
+
+//Initialize personalization functions
+var mcr_button = document.getElementById("mcr");
+mcr_button.addEventListener('click', startMagicCarpetRide);
+
+var redraw_button = document.getElementById("redraw");
+redraw_button.addEventListener('click', updateTimesTable);
+
+var mcr_speed_elm = document.getElementById("mcr_speed");
+var mcr_speed = .01;
+mcr_speed_elm.addEventListener('input'
+                                , function () {
+                                    mcr_speed = parseFloat(mcr_speed_elm.value);
+                                })
+
+//Main program logic
 
 function drawCircle() {
     ctx.beginPath();
@@ -113,6 +161,12 @@ function drawTimesTable() {
         ctx.beginPath();
         ctx.moveTo(Lines[i].x['dim1'], Lines[i].x['dim2']);
         ctx.lineTo(Lines[i].fx['dim1'], Lines[i].fx['dim2']);
+
+        if (p_psychedelic) {
+            nextLineColor();
+            ctx.strokeStyle = line_color;
+        }
+
         ctx.stroke();
     }
     ctx.closePath();
@@ -160,6 +214,40 @@ function updateCanvas() {
 
     //redraw lines using new parameters
     updateTimesTable();
+}
+
+//Animation Control Flow
+
+var rAF;
+
+function startMagicCarpetRide() {
+    mcr_button.innerHTML = "Stop";
+    mcr_button.removeEventListener('click', startMagicCarpetRide);
+    mcr_button.addEventListener('click', stopMagicCarpetRide);
+    mcrLoop();
+}
+
+function mcrLoop() {
+    rAF = requestAnimationFrame(mcrLoop);
+    mInput.value = parseFloat(mInput.value) + mcr_speed;
+    if (p_colorize) nextLineColor();
+    updateTimesTable();
+}
+
+function stopMagicCarpetRide() {
+    cancelAnimationFrame(rAF);
+    rAF = null;
+    mcr_button.innerHTML = "Magic Carpet Ride";
+    mcr_button.removeEventListener('click', stopMagicCarpetRide);
+    mcr_button.addEventListener('click', startMagicCarpetRide);
+}
+
+//Color functions
+function nextLineColor() {
+    init_color = parseInt(line_color.slice(1), 16);
+    next_color = init_color + color_increment;
+    if (next_color > 16777215) next_color = 0;
+    line_color = '#' + Number(next_color).toString(16);
 }
 
 updateCanvas();

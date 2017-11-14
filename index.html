@@ -42,6 +42,22 @@
             <label for="avg_drawtime">Avg. time to draw frame (ms): </label>
             <span id="avg_drawtime">0</span>
         </br>
+
+        <br>
+            <button type="button" id="mcr">Magic Carpet Ride</button>
+            <label for="mcr_speed">Speed: </label>
+            <input type="number" id="mcr_speed" value=".01" min=".01" step=".01" required></input>
+        </br>
+
+        <br>
+            <button type="button" id="colorize">Colorize</button>
+            <button type="button" id="psychedelic">Psychedelic</button>
+            <label for="color_increment">Color change increment: </label>
+            <input type="number" id="color_increment" value="64" min="0" step="1"></input>
+            <label for="set_color">Set color: </label>
+            <input type="color" id="set_color">
+            <button type="button" id="redraw">Redraw</button>
+        </br>
         
         <canvas id='mult-circle' width='600' height='600'>Your browser does not support the HTML5 Canvas tag</canvas>
         <script src="scripts/mult-circle.js"></script>
