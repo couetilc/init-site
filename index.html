@@ -27,21 +27,21 @@
         <!-- Modulo Multiplication tables projected onto a circle -->
         <h2>Modulo Multiplication Table projected onto a circle</h2>
 
-        <label for="m-value">Multiplier: </label>
-        <input id="m-value" type="number" value="2" min="0" step="0.1" required>
-        <datalist id="m-defaults">
-            <option value="0">
-            <option value="1">
-            <option value="2">
-            <option value="3">
-            <option value="4">
-            <option value="5">
-            <option value="6">
-            <option value="7">
-            <option value="8">
-            <option value="9">
-            <option value="10">
-        </datalist>
+        <br>
+            <label for="m-value">Multiplier: </label>
+            <input id="m-value" type="number" value="2" min="0" step="0.1" required></input>
+
+            <label for="n-value">Detail (Modulus value): </label>
+            <input id="n-value" type="number" value="200" min="1" step="1" required></input>
+        </br>
+
+        <br>
+            <label for="last_drawtime">Time to draw frame (ms): </label>
+            <span id="last_drawtime">0</span>
+
+            <label for="avg_drawtime">Avg. time to draw frame (ms): </label>
+            <span id="avg_drawtime">0</span>
+        </br>
         
         <canvas id='mult-circle' width='600' height='600'>Your browser does not support the HTML5 Canvas tag</canvas>
         <script src="scripts/mult-circle.js"></script>
